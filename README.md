@@ -62,8 +62,16 @@ Contoh: bruto Rp10.000.000, PPN 11%, PPh 1,5%
 
 ## Privasi
 
-Tidak ada data transaksi yang dikirim ke server, tidak ada riwayat yang
-disimpan, dan tidak ada penggunaan `localStorage` maupun cookie.
+Tidak ada data transaksi yang dikirim ke server dan tidak ada riwayat
+perhitungan yang disimpan. Satu-satunya data yang disimpan di perangkat adalah
+preferensi tema (`light`/`dark`) melalui `localStorage`; tidak ada cookie dan
+tidak ada data pribadi yang dikumpulkan.
+
+## Tema
+
+Nettax mendukung mode terang dan gelap. Tombol tema di header mengganti tampilan
+seketika dan pilihan tersebut diingat di perangkat melalui `localStorage`
+(kunci `nettax-theme`).
 
 ## Teknologi
 

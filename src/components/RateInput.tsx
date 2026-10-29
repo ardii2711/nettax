@@ -19,16 +19,16 @@ export function RateInput({ label, value, onChange, error }: RateInputProps) {
 
   return (
     <div>
-      <label htmlFor={id} className="text-sm font-semibold text-slate-700">
+      <label htmlFor={id} className="text-sm font-semibold text-slate-700 dark:text-slate-200">
         {label}
       </label>
 
       <div
         className={[
-          'mt-2 flex items-center overflow-hidden rounded-xl border bg-white transition',
+          'mt-2 flex items-center overflow-hidden rounded-xl border bg-white transition dark:bg-navy-950/60',
           error
-            ? 'border-red-300 ring-1 ring-red-100'
-            : 'border-slate-200 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100',
+            ? 'border-red-300 ring-1 ring-red-100 dark:border-red-500/50 dark:ring-red-500/20'
+            : 'border-slate-200 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 dark:border-white/10 dark:focus-within:border-brand-500 dark:focus-within:ring-brand-500/25',
         ].join(' ')}
       >
         <input
@@ -41,10 +41,10 @@ export function RateInput({ label, value, onChange, error }: RateInputProps) {
           onChange={handleChange}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className="min-w-0 flex-1 bg-transparent py-2 pl-3 text-base font-semibold text-slate-900 tabular-nums outline-none placeholder:text-slate-300 sm:py-2.5 sm:pl-3.5 sm:text-lg"
+          className="min-w-0 flex-1 bg-transparent py-2 pl-3 text-base font-semibold text-slate-900 tabular-nums outline-none placeholder:text-slate-300 sm:py-2.5 sm:pl-3.5 sm:text-lg dark:text-slate-50 dark:placeholder:text-slate-600"
         />
         <span
-          className="pr-3.5 pl-1 text-sm font-medium text-slate-400"
+          className="pr-3.5 pl-1 text-sm font-medium text-slate-400 dark:text-slate-500"
           aria-hidden="true"
         >
           %
@@ -52,7 +52,7 @@ export function RateInput({ label, value, onChange, error }: RateInputProps) {
       </div>
 
       {error ? (
-        <p id={errorId} className="mt-1.5 text-xs font-medium text-red-600">
+        <p id={errorId} className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">
           {error}
         </p>
       ) : null}

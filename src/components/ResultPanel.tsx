@@ -108,7 +108,7 @@ export function ResultPanel({ mode, result, rates }: ResultPanelProps) {
   return (
     <section
       aria-labelledby="result-title"
-      className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl bg-linear-to-br from-navy-900 via-navy-900 to-navy-800 p-4 text-white shadow-xl shadow-navy-900/10 ring-1 ring-white/10 sm:p-6"
+      className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl bg-linear-to-br from-navy-900 via-navy-900 to-navy-800 p-4 text-white shadow-xl shadow-navy-900/10 ring-1 ring-white/10 sm:p-6 dark:shadow-black/40 dark:ring-white/15"
     >
       <div className="flex items-start justify-between gap-3">
         <div>

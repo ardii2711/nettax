@@ -57,11 +57,6 @@ export function ResultPanel({ mode, result, rates }: ResultPanelProps) {
   const heroValue =
     result === null ? null : mode === 'gross' ? result.net : result.gross
 
-  const activeFormula =
-    mode === 'gross'
-      ? 'N = G − (V + PPh)'
-      : 'G = N / ((100 / (100 + P)) × (1 − Q / 100))'
-
   let rows: Row[] = []
 
   if (result && rates) {

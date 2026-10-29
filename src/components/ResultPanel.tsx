@@ -175,17 +175,11 @@ export function ResultPanel({ mode, result, rates }: ResultPanelProps) {
           ))}
         </dl>
       ) : (
-        <p className="mt-4 rounded-xl border border-dashed border-white/15 bg-white/5 px-4 py-4 text-center text-xs text-white/55 sm:mt-6 sm:py-6 sm:text-sm">
+        <p className="mt-4 rounded-xl border border-dashed border-white/15 bg-white/5 px-8 py-8 text-center text-xs text-white/55 sm:mt-10 sm:py-10 sm:text-sm">
           Masukkan nilai transaksi dan pastikan tarif valid untuk melihat rincian
           perhitungan.
         </p>
       )}
-
-      <p className="mt-4 rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-[10px] text-white/45 sm:text-[11px]">
-        <span className="wrap-break-word whitespace-pre-wrap">
-          Rumus aktif: {activeFormula}
-        </span>
-      </p>
 
       <div className="mt-auto flex flex-col gap-2 pt-4 sm:flex-row sm:items-center sm:pt-5">
         <button

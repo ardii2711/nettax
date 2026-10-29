@@ -32,11 +32,11 @@ export function AppHeader({ theme, onToggleTheme }: AppHeaderProps) {
         <div className="flex items-center gap-3">
           <Logo className="size-10 shrink-0 drop-shadow-sm sm:size-12" />
           <div>
-            <p className="text-xl font-bold tracking-tight text-navy-900 sm:text-2xl dark:text-slate-100">
+            <p className="text-md font-bold tracking-tight text-navy-900 sm:text-xl dark:text-slate-100">
               Nettax
             </p>
             <p className="text-xs text-slate-500 sm:text-sm dark:text-slate-400">
-              Hitung Pajak, Lebih Mudah.
+              Kalkulator PPN & PPh Instan
             </p>
           </div>
         </div>
@@ -47,7 +47,7 @@ export function AppHeader({ theme, onToggleTheme }: AppHeaderProps) {
               className="size-1.5 rounded-full bg-accent-500"
               aria-hidden="true"
             />
-            Gratis · Tanpa akun · Data tidak dikirim
+            Open & Private
           </p>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>

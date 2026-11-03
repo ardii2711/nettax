@@ -8,8 +8,17 @@ type AppHeaderProps = {
   onToggleTheme: () => void;
 };
 
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+function formatClock(date: Date): string {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 export function AppHeader({ theme, onToggleTheme }: AppHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     const update = () => setIsScrolled(window.scrollY > 8);
@@ -17,6 +26,11 @@ export function AppHeader({ theme, onToggleTheme }: AppHeaderProps) {
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(timer);
   }, []);
 
   return (
@@ -38,9 +52,12 @@ export function AppHeader({ theme, onToggleTheme }: AppHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-2.5">
-          <p className="hidden items-center gap-2 rounded-full bg-white/70 px-3.5 py-1.5 text-xs font-medium text-slate-600 ring-1 ring-slate-200/80 backdrop-blur sm:inline-flex dark:bg-white/5 dark:text-slate-300 dark:ring-white/10">
+          <p
+            className="hidden items-center gap-2 rounded-full bg-white/70 px-3.5 py-1.5 text-xs font-medium tabular-nums text-slate-600 ring-1 ring-slate-200/80 backdrop-blur sm:inline-flex dark:bg-white/5 dark:text-slate-300 dark:ring-white/10"
+            aria-label={`Waktu saat ini ${formatClock(now)}`}
+          >
             <span className="size-1.5 rounded-full bg-accent-500" aria-hidden="true" />
-            Open & Private
+            <time>{formatClock(now)}</time>
           </p>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>

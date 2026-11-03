@@ -1,10 +1,10 @@
 # Nettax — Kalkulator PPN & PPh
 
-Aplikasi web sederhana untuk menghitung PPN, PPh 22, PPh 23, total pajak, dan
-nilai bersih transaksi. Tersedia lima skenario pajak, dan setiap skenario dapat
-dihitung dari nilai bruto maupun dari target nilai bersih (reverse
-calculation). Seluruh perhitungan berjalan di browser — tanpa backend, tanpa
-database, dan tanpa akun.
+Aplikasi web sederhana untuk menghitung PPN, PPh 21, PPh 22, PPh 23, total
+pajak, dan nilai bersih transaksi. Tersedia enam skenario pajak, dan setiap
+skenario dapat dihitung dari nilai bruto maupun dari target nilai bersih
+(reverse calculation). Seluruh perhitungan berjalan di browser — tanpa backend,
+tanpa database, dan tanpa akun.
 
 ## Menjalankan
 
@@ -20,19 +20,35 @@ npm run preview  # pratinjau hasil build
 | Skenario     | Komponen aktif | Tarif awal   |
 | ------------ | -------------- | ------------ |
 | PPN          | PPN            | 11%          |
+| PPh 21       | PPh 21         | 5%           |
 | PPh 22       | PPh 22         | 1,5%         |
 | PPh 23       | PPh 23         | 2%           |
 | PPN + PPh 22 | PPN, PPh 22    | 11% dan 1,5% |
 | PPN + PPh 23 | PPN, PPh 23    | 11% dan 2%   |
 
 Skenario awal adalah **PPN**. Semua tarif dapat diubah dan nilainya diingat
-terpisah untuk PPh 22 dan PPh 23.
+terpisah untuk PPh 21, PPh 22, dan PPh 23.
+
+### Kategori PPh 21
+
+PPh 21 dipakai untuk honorarium narasumber/pembahas, moderator, pembawa acara,
+dan panitia, serta dihitung dari penghasilan bruto tanpa PPN.
+
+| Kategori     | Tarif awal |
+| ------------ | ---------- |
+| PNS Gol. III | 5%         |
+| PNS Gol. IV  | 15%        |
+| PPPK         | 5%         |
+| Non ASN      | 5%         |
+
+Memilih kategori akan mengisi tarif secara otomatis, dan tarif tersebut tetap
+bisa diubah manual pada kolom tarif.
 
 ## Metode Perhitungan
 
-Variabel: `G` nilai bruto, `P` tarif PPN (%), `Q` tarif PPh 22 atau PPh 23 (%),
-`V` nilai PPN, `H` dasar pengenaan PPh, `T` total pajak, `N` nilai bersih.
-Komponen yang tidak termasuk skenario dianggap `0`.
+Variabel: `G` nilai bruto, `P` tarif PPN (%), `Q` tarif PPh (%), `V` nilai PPN,
+`H` dasar pengenaan PPh, `T` total pajak, `N` nilai bersih. Komponen yang tidak
+termasuk skenario dianggap `0`.
 
 **Mode A — dari nilai bruto**
 
@@ -64,13 +80,24 @@ Contoh: bruto Rp10.000.000, PPN 11%, PPh 22 1,5%
 | Total pajak  | Rp1.126.126,13 |
 | Nilai bersih | Rp8.873.873,87 |
 
+Contoh PPh 21: bruto Rp10.000.000, kategori PNS Gol. IV (15%)
+
+| Komponen     | Nilai        |
+| ------------ | ------------ |
+| Dasar PPh    | Rp10.000.000 |
+| PPh 21       | Rp1.500.000  |
+| Total pajak  | Rp1.500.000  |
+| Nilai bersih | Rp8.500.000  |
+
 ## Asumsi
 
-- Tarif awal 11% (PPN), 1,5% (PPh 22), dan 2% (PPh 23) hanyalah konfigurasi awal
-  yang dapat diubah pengguna, bukan klaim tarif yang berlaku untuk semua
-  transaksi.
+- Tarif awal 11% (PPN), 5% (PPh 21), 1,5% (PPh 22), dan 2% (PPh 23) hanyalah
+  konfigurasi awal yang dapat diubah pengguna, bukan klaim tarif yang berlaku
+  untuk semua transaksi.
 - PPN dihitung sebagai bagian dari nilai bruto (`G × P / (100 + P)`).
 - PPh 22 maupun PPh 23 dihitung dari nilai bruto setelah dikurangi PPN (DPP).
+- PPh 21 dihitung dari penghasilan bruto tanpa PPN. Skenario PPh 21 berdiri
+  sendiri dan tidak digabung dengan PPN.
 - Pada skenario tanpa PPN, DPP sama dengan nilai bruto.
 - Presisi penuh dipakai selama perhitungan; pembulatan hanya dilakukan saat
   menampilkan hasil (Rupiah tanpa desimal, pembulatan setengah ke atas).

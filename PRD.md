@@ -81,7 +81,7 @@ Pengguna membutuhkan aplikasi yang:
 | F-01 | Kalkulasi dari nilai bruto                                       | Must Have   |
 | F-02 | Kalkulasi dari nilai bersih                                      | Must Have   |
 | F-03 | Perhitungan PPN                                                  | Must Have   |
-| F-04 | Perhitungan PPh 22 dan PPh 23                                    | Must Have   |
+| F-04 | Perhitungan PPh 21, PPh 22, dan PPh 23                          | Must Have   |
 | F-05 | Ringkasan total pajak dan nilai akhir                            | Must Have   |
 | F-06 | Pengaturan tarif pajak                                           | Must Have   |
 | F-07 | Format Rupiah tanpa angka desimal                                | Must Have   |
@@ -89,7 +89,8 @@ Pengguna membutuhkan aplikasi yang:
 | F-09 | Reset formulir                                                   | Should Have |
 | F-10 | Tampilan responsif                                               | Must Have   |
 | F-11 | Logo dan identitas visual Nettax                                 | Should Have |
-| F-12 | Pemilihan skenario pajak (PPN, PPh 22, PPh 23, dan kombinasinya) | Must Have   |
+| F-12 | Pemilihan skenario pajak (PPN, PPh 21, PPh 22, PPh 23, dan kombinasi PPN + PPh) | Must Have   |
+| F-13 | Kategori tarif PPh 21 untuk honorarium (PNS Gol. III/IV, PPPK, Non ASN)       | Must Have   |
 
 ### 4.2 Fitur di Luar MVP
 
@@ -115,24 +116,37 @@ Fitur tersebut dapat dipertimbangkan jika kebutuhan produk berkembang.
 Tarif awal mengikuti metode yang digunakan dalam kebutuhan awal produk:
 
 - PPN: 11%.
+- PPh 21: 5%.
 - PPh 22: 1,5%.
 - PPh 23: 2%.
+
+Untuk PPh 21, tarif awal mengikuti kategori yang dipilih:
+
+| Kategori     | Tarif awal |
+| ------------ | ---------- |
+| PNS Gol. III | 5%         |
+| PNS Gol. IV  | 15%        |
+| PPPK         | 5%         |
+| Non ASN      | 5%         |
 
 Tarif tersebut merupakan konfigurasi awal kalkulator, bukan klaim bahwa tarif tersebut berlaku untuk semua jenis transaksi. Pengguna harus dapat mengubah tarif sesuai kebutuhan.
 
 ### 5.1a Skenario Pajak
 
-Aplikasi menyediakan lima skenario yang dapat dipilih pengguna:
+Aplikasi menyediakan enam skenario yang dapat dipilih pengguna:
 
 | Skenario     | Komponen aktif |
 | ------------ | -------------- |
 | PPN          | PPN            |
+| PPh 21       | PPh 21         |
 | PPh 22       | PPh 22         |
 | PPh 23       | PPh 23         |
 | PPN + PPh 22 | PPN dan PPh 22 |
 | PPN + PPh 23 | PPN dan PPh 23 |
 
 Setiap skenario dapat dihitung dari nilai bruto maupun dari target nilai bersih. Skenario awal adalah PPN.
+
+PPh 21 digunakan untuk honorarium narasumber/pembahas, moderator, pembawa acara, dan panitia. Skenario PPh 21 berdiri sendiri (tanpa PPN) dan dihitung dari penghasilan bruto. Memilih kategori PPh 21 akan mengisi tarif secara otomatis, dan tarif tetap dapat diubah manual.
 
 ### 5.2 Mode A — Hitung dari Nilai Bruto
 
@@ -142,7 +156,7 @@ Definisi variabel:
 
 - `G` = nilai bruto.
 - `P` = tarif PPN dalam persen.
-- `Q` = tarif PPh 22 atau PPh 23 dalam persen.
+- `Q` = tarif PPh 21, PPh 22, atau PPh 23 dalam persen.
 - `V` = nilai PPN.
 - `H` = nilai dasar pengenaan PPh sesuai metode kalkulator.
 - `T` = total pajak.
@@ -159,6 +173,8 @@ Rumus:
 **Dasar perhitungan PPh**
 
 `H = G − V`
+
+Pada skenario PPh 21, `V = 0` sehingga `H = G` (penghasilan bruto tanpa PPN).
 
 **PPh**
 
@@ -204,6 +220,21 @@ Hasil matematis sebelum pembulatan tampilan:
 
 Tampilan Rupiah tanpa desimal akan membulatkan nilai-nilai tersebut ke bilangan Rupiah terdekat.
 
+Contoh PPh 21 dengan kategori PNS Gol. IV:
+
+Input:
+
+- Nilai bruto: Rp10.000.000
+- PPh 21: 15%
+- PPN: tidak termasuk skenario
+
+Hasil:
+
+- Dasar perhitungan PPh: Rp10.000.000
+- PPh 21: Rp1.500.000
+- Total pajak: Rp1.500.000
+- Nilai bersih: Rp8.500.000
+
 **Catatan:** Rumus di atas mengikuti metode yang didefinisikan untuk Nettax. Implementasi untuk transaksi nyata perlu disesuaikan dengan ketentuan pajak yang berlaku dan jenis transaksi terkait.
 
 ---
@@ -229,8 +260,9 @@ Perubahan mode mengubah label dan fungsi input utama tanpa perlu memuat ulang ha
 
 ### F-03 — Pengaturan Tarif Pajak
 
-- Tarif PPN, PPh 22, dan PPh 23 dapat diedit.
+- Tarif PPN, PPh 21, PPh 22, dan PPh 23 dapat diedit.
 - Nilai default tersedia ketika aplikasi pertama kali dibuka.
+- Memilih kategori PPh 21 mengisi tarif kategori tersebut, tetapi tarif tetap dapat diubah manual.
 - Hanya tarif yang termasuk skenario aktif yang ditampilkan dan divalidasi.
 - Perubahan tarif langsung memperbarui hasil.
 - Tarif harus divalidasi sebelum digunakan.
@@ -238,10 +270,19 @@ Perubahan mode mengubah label dan fungsi input utama tanpa perlu memuat ulang ha
 
 ### F-12 — Pemilihan Skenario Pajak
 
-- Pengguna dapat memilih salah satu dari lima skenario: PPN, PPh 22, PPh 23, PPN + PPh 22, atau PPN + PPh 23.
+- Pengguna dapat memilih salah satu dari enam skenario: PPN, PPh 21, PPh 22, PPh 23, PPN + PPh 22, atau PPN + PPh 23.
 - Perubahan skenario memperbarui input tarif, ringkasan hasil, rumus, dan teks salin tanpa memuat ulang halaman.
-- Nilai tarif PPh 22 dan PPh 23 diingat terpisah sehingga tidak hilang saat berpindah skenario.
+- Nilai tarif PPh 21, PPh 22, dan PPh 23 diingat terpisah sehingga tidak hilang saat berpindah skenario.
 - Skenario awal dan hasil reset adalah PPN.
+
+### F-13 — Kategori PPh 21
+
+- Kategori PPh 21 ditampilkan hanya ketika skenario PPh 21 aktif.
+- Kategori yang tersedia: PNS Gol. III (5%), PNS Gol. IV (15%), PPPK (5%), dan Non ASN (5%).
+- Memilih kategori mengisi tarif PPh 21 secara otomatis.
+- Tarif hasil pengisian otomatis tetap dapat diedit manual.
+- PPh 21 dihitung dari penghasilan bruto tanpa PPN.
+- PPh 21 tidak digabung dengan PPN dalam satu skenario.
 
 ### F-04 — Hasil Perhitungan
 
@@ -250,7 +291,7 @@ Setiap hasil harus menampilkan:
 1. Nilai bruto.
 2. Nilai PPN (jika skenario memuat PPN).
 3. Dasar perhitungan PPh (jika skenario memuat PPh).
-4. Nilai PPh 22 atau PPh 23 sesuai skenario.
+4. Nilai PPh 21, PPh 22, atau PPh 23 sesuai skenario.
 5. Total pajak.
 6. Nilai bersih setelah pajak.
 
@@ -403,9 +444,11 @@ Seluruh kalkulasi berjalan di sisi klien (_client-side_). Aplikasi dapat dibangu
 
 Produk MVP dianggap siap jika kriteria berikut terpenuhi:
 
-- [ ] Pengguna dapat menghitung PPN dan/atau PPh 22/PPh 23 dari nilai bruto.
+- [ ] Pengguna dapat menghitung PPN dan/atau PPh 21/PPh 22/PPh 23 dari nilai bruto.
 - [ ] Pengguna dapat menghitung nilai bruto dari target nilai bersih.
-- [ ] Kelima skenario pajak dapat dipilih dan hasilnya sesuai rumus.
+- [ ] Keenam skenario pajak dapat dipilih dan hasilnya sesuai rumus.
+- [ ] Kategori PPh 21 mengisi tarif otomatis dan tarif tetap dapat diubah.
+- [ ] PPh 21 dihitung dari penghasilan bruto tanpa PPN.
 - [ ] Tarif pajak dapat diubah.
 - [ ] Semua rincian pajak tampil sesuai rumus.
 - [ ] Format Rupiah tidak menampilkan angka desimal.

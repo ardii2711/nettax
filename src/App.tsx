@@ -3,25 +3,46 @@ import { AppHeader } from "./components/AppHeader";
 import { CurrencyInput } from "./components/CurrencyInput";
 import { FormulaPanel } from "./components/FormulaPanel";
 import { ModeToggle } from "./components/ModeToggle";
+import { Pph21CategorySelector } from "./components/Pph21CategorySelector";
 import { RateInput } from "./components/RateInput";
 import { ResultPanel } from "./components/ResultPanel";
 import { ScenarioSelector } from "./components/ScenarioSelector";
 import { useTaxCalculator } from "./hooks/useTaxCalculator";
 import { useTheme } from "./hooks/useTheme";
-import { pphDefaultRate, type Scenario } from "./lib/scenario";
+import { pphDefaultRate, type Pph21Category, type Scenario } from "./lib/scenario";
 
-function buildRateHint(scenario: Scenario): string {
-  const parts = [scenario.includesPpn ? "PPN 11%" : null, scenario.pphKind ? `PPh ${scenario.pphKind} ${pphDefaultRate(scenario.pphKind)}%` : null].filter(
-    (part): part is string => part !== null,
-  );
+function buildRateHint(scenario: Scenario, pph21Category: Pph21Category): string {
+  const pphPart = scenario.pphKind
+    ? scenario.pphKind === "21"
+      ? `PPh 21 ${pph21Category.rate}% (${pph21Category.label})`
+      : `PPh ${scenario.pphKind} ${pphDefaultRate(scenario.pphKind)}%`
+    : null;
+  const parts = [scenario.includesPpn ? "PPN 11%" : null, pphPart].filter((part): part is string => part !== null);
 
   return `Tarif awal ${parts.join(" dan ")} — bisa diubah sesuai transaksi Anda.`;
 }
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
-  const { scenario, setScenario, mode, setMode, amountDigits, setAmountDigits, ppnRaw, setPpnRaw, pphRaw, setPphRaw, errors, result, rates, reset, isDirty } =
-    useTaxCalculator();
+  const {
+    scenario,
+    setScenario,
+    mode,
+    setMode,
+    amountDigits,
+    setAmountDigits,
+    ppnRaw,
+    setPpnRaw,
+    pphRaw,
+    setPphRaw,
+    pph21Category,
+    setPph21Category,
+    errors,
+    result,
+    rates,
+    reset,
+    isDirty,
+  } = useTaxCalculator();
 
   const amountLabel = mode === "gross" ? "Nilai Bruto (sebelum pajak)" : "Target Nilai Bersih";
   const amountHint = mode === "gross" ? (scenario.includesPpn ? "Termasuk PPN" : "Sebelum dipotong PPh") : "Yang ingin diterima";
@@ -40,11 +61,13 @@ export default function App() {
               <h1 id="calculator-title" className="text-sm font-semibold text-navy-900 sm:text-base dark:text-slate-100">
                 Kalkulator Pajak
               </h1>
-              <span className="text-[11px] text-slate-400 sm:text-xs dark:text-slate-500">PPN · PPh 22 · PPh 23</span>
+              <span className="text-[11px] text-slate-400 sm:text-xs dark:text-slate-500">PPN · PPh 21 · PPh 22 · PPh 23</span>
             </div>
 
             <form className="mt-4 space-y-4 sm:mt-5 sm:space-y-5" noValidate onSubmit={(event) => event.preventDefault()}>
               <ScenarioSelector value={scenario.id} onChange={setScenario} />
+
+              {scenario.pphKind === "21" ? <Pph21CategorySelector value={pph21Category.id} onChange={setPph21Category} /> : null}
 
               <ModeToggle value={mode} onChange={setMode} />
 
@@ -56,7 +79,7 @@ export default function App() {
                   {scenario.includesPpn ? <RateInput label="PPN" value={ppnRaw} onChange={setPpnRaw} error={errors.ppn} /> : null}
                   {scenario.pphKind ? <RateInput label={`PPh ${scenario.pphKind}`} value={pphRaw} onChange={setPphRaw} error={errors.pph} /> : null}
                 </div>
-                <p className="mt-2 text-[11px] leading-relaxed text-slate-500 sm:text-xs dark:text-slate-400">{buildRateHint(scenario)}</p>
+                <p className="mt-2 text-[11px] leading-relaxed text-slate-500 sm:text-xs dark:text-slate-400">{buildRateHint(scenario, pph21Category)}</p>
               </fieldset>
 
               <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 sm:pt-4 dark:border-white/10">

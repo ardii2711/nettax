@@ -1,37 +1,35 @@
-import type { Mode } from '../lib/tax'
+import type { Mode } from "../lib/tax";
 
 type ModeToggleProps = {
-  value: Mode
-  onChange: (mode: Mode) => void
-}
+  value: Mode;
+  onChange: (mode: Mode) => void;
+};
 
 const OPTIONS: Array<{ value: Mode; label: string; description: string }> = [
   {
-    value: 'gross',
-    label: 'Dari Bruto',
-    description: 'Nilai transaksi sebelum pajak',
+    value: "gross",
+    label: "Dari Bruto",
+    description: "Nilai transaksi sebelum pajak",
   },
   {
-    value: 'net',
-    label: 'Dari Bersih',
-    description: 'Target nilai yang ingin diterima',
+    value: "net",
+    label: "Dari Bersih",
+    description: "Target nilai yang ingin diterima",
   },
-]
+];
 
 export function ModeToggle({ value, onChange }: ModeToggleProps) {
   return (
     <fieldset>
-      <legend className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-        Mode perhitungan
-      </legend>
+      <legend className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Mode perhitungan</legend>
 
       <div className="relative mt-2 grid grid-cols-2 rounded-xl bg-slate-100 p-1 dark:bg-white/10">
         <span
           aria-hidden="true"
           className={[
-            'pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-lg bg-white shadow-sm ring-1 ring-slate-200/80 transition-transform duration-200 ease-out dark:bg-navy-800 dark:ring-white/15',
-            value === 'net' ? 'translate-x-full' : 'translate-x-0',
-          ].join(' ')}
+            "pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-lg bg-white shadow-sm ring-1 ring-slate-200/80 transition-transform duration-200 ease-out dark:bg-navy-800 dark:ring-white/15",
+            value === "net" ? "translate-x-full" : "translate-x-0",
+          ].join(" ")}
         />
 
         {OPTIONS.map((option) => (
@@ -50,12 +48,10 @@ export function ModeToggle({ value, onChange }: ModeToggleProps) {
             <span className="text-[13px] font-semibold text-slate-500 transition peer-checked:text-navy-900 sm:text-sm dark:text-slate-400 dark:peer-checked:text-white">
               {option.label}
             </span>
-            <span className="mt-0.5 hidden text-[11px] leading-tight text-slate-400 lg:block dark:text-slate-500">
-              {option.description}
-            </span>
+            <span className="mt-0.5 hidden text-[11px] leading-tight text-slate-400 lg:block dark:text-slate-500">{option.description}</span>
           </label>
         ))}
       </div>
     </fieldset>
-  )
+  );
 }

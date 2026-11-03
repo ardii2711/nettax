@@ -1,3 +1,4 @@
+import type { Scenario } from './scenario'
 import type { TaxBreakdown, TaxRates } from './tax'
 
 const rupiahFormatter = new Intl.NumberFormat('id-ID', {
@@ -29,13 +30,32 @@ export function formatRate(value: number): string {
   return rateFormatter.format(value)
 }
 
-/** Ringkasan teks untuk fitur salin hasil. */
-export function buildCopyText(result: TaxBreakdown, rates: TaxRates): string {
-  return [
-    `Nilai Bruto: ${formatRupiah(result.gross)}`,
-    `PPN (${formatRate(rates.ppn)}%): ${formatRupiah(result.ppn)}`,
-    `PPh (${formatRate(rates.pph)}%): ${formatRupiah(result.pph)}`,
+/**
+ * Ringkasan teks untuk fitur salin hasil. Hanya komponen yang aktif pada
+ * skenario yang disertakan.
+ */
+export function buildCopyText(
+  result: TaxBreakdown,
+  rates: TaxRates,
+  scenario: Scenario,
+): string {
+  const lines = [`Nilai Bruto: ${formatRupiah(result.gross)}`]
+
+  if (scenario.includesPpn) {
+    lines.push(`PPN (${formatRate(rates.ppn)}%): ${formatRupiah(result.ppn)}`)
+  }
+
+  if (scenario.pphKind) {
+    lines.push(
+      `Dasar Pengenaan PPh: ${formatRupiah(result.pphBase)}`,
+      `PPh ${scenario.pphKind} (${formatRate(rates.pph)}%): ${formatRupiah(result.pph)}`,
+    )
+  }
+
+  lines.push(
     `Total Pajak: ${formatRupiah(result.totalTax)}`,
     `Nilai Bersih: ${formatRupiah(result.net)}`,
-  ].join('\n')
+  )
+
+  return lines.join('\n')
 }

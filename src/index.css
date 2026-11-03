@@ -19,8 +19,7 @@
   --color-accent-400: #22d3ee;
   --color-accent-500: #14b8a6;
 
-  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Tipografi fluid — menyesuaikan ukuran layar */
   --text-display: clamp(1.6rem, 1.2rem + 1.7vw, 2.6rem);

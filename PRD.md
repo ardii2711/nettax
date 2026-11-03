@@ -1,4 +1,5 @@
 # Product Requirements Document (PRD)
+
 # Nettax — Kalkulator Pajak
 
 **Versi:** 1.0  
@@ -14,7 +15,7 @@
 
 **Nettax**
 
-Tagline: *Hitung Pajak, Lebih Mudah.*
+Tagline: _Hitung Pajak, Lebih Mudah._
 
 ### 1.2 Deskripsi
 
@@ -75,19 +76,20 @@ Pengguna membutuhkan aplikasi yang:
 
 ### 4.1 Fitur MVP (Minimum Viable Product)
 
-| ID | Fitur | Prioritas |
-|---|---|---|
-| F-01 | Kalkulasi dari nilai bruto | Must Have |
-| F-02 | Kalkulasi dari nilai bersih | Must Have |
-| F-03 | Perhitungan PPN | Must Have |
-| F-04 | Perhitungan PPh | Must Have |
-| F-05 | Ringkasan total pajak dan nilai akhir | Must Have |
-| F-06 | Pengaturan tarif pajak | Must Have |
-| F-07 | Format Rupiah tanpa angka desimal | Must Have |
-| F-08 | Salin hasil perhitungan | Should Have |
-| F-09 | Reset formulir | Should Have |
-| F-10 | Tampilan responsif | Must Have |
-| F-11 | Logo dan identitas visual Nettax | Should Have |
+| ID   | Fitur                                                            | Prioritas   |
+| ---- | ---------------------------------------------------------------- | ----------- |
+| F-01 | Kalkulasi dari nilai bruto                                       | Must Have   |
+| F-02 | Kalkulasi dari nilai bersih                                      | Must Have   |
+| F-03 | Perhitungan PPN                                                  | Must Have   |
+| F-04 | Perhitungan PPh 22 dan PPh 23                                    | Must Have   |
+| F-05 | Ringkasan total pajak dan nilai akhir                            | Must Have   |
+| F-06 | Pengaturan tarif pajak                                           | Must Have   |
+| F-07 | Format Rupiah tanpa angka desimal                                | Must Have   |
+| F-08 | Salin hasil perhitungan                                          | Should Have |
+| F-09 | Reset formulir                                                   | Should Have |
+| F-10 | Tampilan responsif                                               | Must Have   |
+| F-11 | Logo dan identitas visual Nettax                                 | Should Have |
+| F-12 | Pemilihan skenario pajak (PPN, PPh 22, PPh 23, dan kombinasinya) | Must Have   |
 
 ### 4.2 Fitur di Luar MVP
 
@@ -113,9 +115,24 @@ Fitur tersebut dapat dipertimbangkan jika kebutuhan produk berkembang.
 Tarif awal mengikuti metode yang digunakan dalam kebutuhan awal produk:
 
 - PPN: 11%.
-- PPh: 1,5%.
+- PPh 22: 1,5%.
+- PPh 23: 2%.
 
 Tarif tersebut merupakan konfigurasi awal kalkulator, bukan klaim bahwa tarif tersebut berlaku untuk semua jenis transaksi. Pengguna harus dapat mengubah tarif sesuai kebutuhan.
+
+### 5.1a Skenario Pajak
+
+Aplikasi menyediakan lima skenario yang dapat dipilih pengguna:
+
+| Skenario     | Komponen aktif |
+| ------------ | -------------- |
+| PPN          | PPN            |
+| PPh 22       | PPh 22         |
+| PPh 23       | PPh 23         |
+| PPN + PPh 22 | PPN dan PPh 22 |
+| PPN + PPh 23 | PPN dan PPh 23 |
+
+Setiap skenario dapat dihitung dari nilai bruto maupun dari target nilai bersih. Skenario awal adalah PPN.
 
 ### 5.2 Mode A — Hitung dari Nilai Bruto
 
@@ -125,16 +142,18 @@ Definisi variabel:
 
 - `G` = nilai bruto.
 - `P` = tarif PPN dalam persen.
-- `Q` = tarif PPh dalam persen.
+- `Q` = tarif PPh 22 atau PPh 23 dalam persen.
 - `V` = nilai PPN.
 - `H` = nilai dasar pengenaan PPh sesuai metode kalkulator.
 - `T` = total pajak.
 - `N` = nilai bersih setelah pajak.
 
+Komponen yang tidak termasuk skenario yang dipilih dianggap bernilai `0`.
+
 Rumus:
 
 **PPN**
-    
+
 `V = G × P / (100 + P)`
 
 **Dasar perhitungan PPh**
@@ -173,13 +192,13 @@ Input:
 
 - Nilai bruto: Rp10.000.000
 - PPN: 11%
-- PPh: 1,5%
+- PPh 22: 1,5%
 
 Hasil matematis sebelum pembulatan tampilan:
 
 - PPN: Rp990.990,99
 - Dasar perhitungan PPh: Rp9.009.009,01
-- PPh: Rp135.135,14
+- PPh 22: Rp135.135,14
 - Total pajak: Rp1.126.126,13
 - Nilai bersih: Rp8.873.873,87
 
@@ -210,20 +229,28 @@ Perubahan mode mengubah label dan fungsi input utama tanpa perlu memuat ulang ha
 
 ### F-03 — Pengaturan Tarif Pajak
 
-- Tarif PPN dan PPh dapat diedit.
+- Tarif PPN, PPh 22, dan PPh 23 dapat diedit.
 - Nilai default tersedia ketika aplikasi pertama kali dibuka.
+- Hanya tarif yang termasuk skenario aktif yang ditampilkan dan divalidasi.
 - Perubahan tarif langsung memperbarui hasil.
 - Tarif harus divalidasi sebelum digunakan.
 - Tarif PPh sebesar 100% atau lebih tidak diperbolehkan untuk kalkulasi balik dengan target nilai bersih positif.
+
+### F-12 — Pemilihan Skenario Pajak
+
+- Pengguna dapat memilih salah satu dari lima skenario: PPN, PPh 22, PPh 23, PPN + PPh 22, atau PPN + PPh 23.
+- Perubahan skenario memperbarui input tarif, ringkasan hasil, rumus, dan teks salin tanpa memuat ulang halaman.
+- Nilai tarif PPh 22 dan PPh 23 diingat terpisah sehingga tidak hilang saat berpindah skenario.
+- Skenario awal dan hasil reset adalah PPN.
 
 ### F-04 — Hasil Perhitungan
 
 Setiap hasil harus menampilkan:
 
 1. Nilai bruto.
-2. Nilai PPN.
-3. Dasar perhitungan PPh.
-4. Nilai PPh.
+2. Nilai PPN (jika skenario memuat PPN).
+3. Dasar perhitungan PPh (jika skenario memuat PPh).
+4. Nilai PPh 22 atau PPh 23 sesuai skenario.
 5. Total pajak.
 6. Nilai bersih setelah pajak.
 
@@ -231,13 +258,14 @@ Semua hasil harus diperbarui secara langsung ketika input berubah.
 
 ### F-05 — Salin Hasil
 
-Pengguna dapat menyalin ringkasan perhitungan ke clipboard untuk digunakan pada dokumen atau aplikasi lain.
+Pengguna dapat menyalin ringkasan perhitungan ke clipboard untuk digunakan pada dokumen atau aplikasi lain. Hanya komponen yang termasuk skenario aktif yang disalin.
 
 Contoh format:
 
 Nilai Bruto: Rp10.000.000  
 PPN (11%): Rp990.991  
-PPh (1,5%): Rp135.135  
+Dasar Pengenaan PPh: Rp9.009.009  
+PPh 22 (1,5%): Rp135.135  
 Total Pajak: Rp1.126.126  
 Nilai Bersih: Rp8.873.874
 
@@ -265,23 +293,28 @@ Karakter visual:
 ### 7.2 Struktur Halaman
 
 **Header**
+
 - Logo Nettax.
 - Nama aplikasi.
 - Deskripsi singkat.
 
 **Area Kalkulator**
+
+- Pemilih skenario pajak.
 - Pemilih mode perhitungan.
 - Input nilai transaksi.
-- Input tarif PPN dan PPh.
+- Input tarif PPN dan/atau PPh sesuai skenario.
 - Tombol reset.
 
 **Area Hasil**
+
 - Nilai bersih atau nilai bruto sebagai hasil utama, sesuai mode.
-- Rincian PPN dan PPh.
+- Rincian komponen pajak yang aktif.
 - Total pajak.
 - Tombol salin hasil.
 
 **Footer**
+
 - Informasi bahwa hasil merupakan kalkulasi berdasarkan tarif dan metode yang dipilih.
 - Catatan bahwa pengguna perlu memastikan kesesuaian dengan ketentuan pajak yang berlaku.
 
@@ -346,23 +379,23 @@ Mendukung browser modern seperti:
 
 ## 9. Teknologi
 
-| Komponen | Teknologi |
-|---|---|
-| UI framework | React |
-| Build tool | Vite |
-| Bahasa | TypeScript |
-| Styling | Tailwind CSS |
-| State management | React state |
-| Formatting Rupiah | `Intl.NumberFormat` |
-| Unit testing | Vitest |
-| Version control | Git dan GitHub |
-| Deployment | Vercel atau Cloudflare Pages |
-| Backend | Tidak ada |
-| Database | Tidak ada |
+| Komponen          | Teknologi                    |
+| ----------------- | ---------------------------- |
+| UI framework      | React                        |
+| Build tool        | Vite                         |
+| Bahasa            | TypeScript                   |
+| Styling           | Tailwind CSS                 |
+| State management  | React state                  |
+| Formatting Rupiah | `Intl.NumberFormat`          |
+| Unit testing      | Vitest                       |
+| Version control   | Git dan GitHub               |
+| Deployment        | Vercel atau Cloudflare Pages |
+| Backend           | Tidak ada                    |
+| Database          | Tidak ada                    |
 
 ### Arsitektur
 
-Seluruh kalkulasi berjalan di sisi klien (*client-side*). Aplikasi dapat dibangun menjadi aset statis dan di-hosting melalui layanan static hosting.
+Seluruh kalkulasi berjalan di sisi klien (_client-side_). Aplikasi dapat dibangun menjadi aset statis dan di-hosting melalui layanan static hosting.
 
 ---
 
@@ -370,8 +403,9 @@ Seluruh kalkulasi berjalan di sisi klien (*client-side*). Aplikasi dapat dibangu
 
 Produk MVP dianggap siap jika kriteria berikut terpenuhi:
 
-- [ ] Pengguna dapat menghitung PPN dan PPh dari nilai bruto.
+- [ ] Pengguna dapat menghitung PPN dan/atau PPh 22/PPh 23 dari nilai bruto.
 - [ ] Pengguna dapat menghitung nilai bruto dari target nilai bersih.
+- [ ] Kelima skenario pajak dapat dipilih dan hasilnya sesuai rumus.
 - [ ] Tarif pajak dapat diubah.
 - [ ] Semua rincian pajak tampil sesuai rumus.
 - [ ] Format Rupiah tidak menampilkan angka desimal.
@@ -390,29 +424,34 @@ Produk MVP dianggap siap jika kriteria berikut terpenuhi:
 ## 11. Rencana Implementasi
 
 ### Tahap 1 — Fondasi
+
 - Inisialisasi proyek React, Vite, TypeScript, dan Tailwind CSS.
 - Menyiapkan struktur direktori.
 - Menentukan desain dasar dan identitas visual.
 
 ### Tahap 2 — Mesin Kalkulasi
+
 - Membuat fungsi perhitungan bruto.
 - Membuat fungsi perhitungan bersih ke bruto.
 - Membuat validasi tarif dan input.
 - Menambahkan unit test.
 
 ### Tahap 3 — UI Kalkulator
+
 - Membuat komponen input.
 - Membuat pemilihan mode.
 - Membuat ringkasan hasil.
 - Menambahkan format Rupiah, reset, dan salin hasil.
 
 ### Tahap 4 — QA dan Responsivitas
+
 - Menguji rumus dan pembulatan.
 - Menguji nilai ekstrem dan input tidak valid.
 - Menguji tampilan desktop dan mobile.
 - Memastikan tidak ada error TypeScript atau build.
 
 ### Tahap 5 — Deployment
+
 - Build aplikasi untuk produksi.
 - Deploy ke layanan hosting statis.
 - Menguji URL publik dan perilaku aplikasi di browser.

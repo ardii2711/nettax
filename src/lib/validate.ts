@@ -40,21 +40,29 @@ export function validatePpn(raw: string): string | null {
   return null
 }
 
-export function validatePph(raw: string, mode: Mode): string | null {
-  if (!raw.trim()) return 'Tarif PPh wajib diisi.'
+/**
+ * Validasi tarif PPh. `label` dipakai pada pesan agar pengguna tahu apakah
+ * yang salah adalah PPh 22 atau PPh 23.
+ */
+export function validatePph(
+  raw: string,
+  mode: Mode,
+  label = 'PPh',
+): string | null {
+  if (!raw.trim()) return `Tarif ${label} wajib diisi.`
 
   const value = parseRate(raw)
-  if (value === null) return 'Tarif PPh tidak valid.'
-  if (value < 0) return 'Tarif PPh tidak boleh negatif.'
+  if (value === null) return `Tarif ${label} tidak valid.`
+  if (value < 0) return `Tarif ${label} tidak boleh negatif.`
 
   if (mode === 'net') {
     if (value >= 100) {
-      return 'Untuk hitung dari bersih, tarif PPh harus di bawah 100%.'
+      return `Untuk hitung dari bersih, tarif ${label} harus di bawah 100%.`
     }
     return null
   }
 
-  if (value > 100) return 'Tarif PPh harus antara 0 dan 100%.'
+  if (value > 100) return `Tarif ${label} harus antara 0 dan 100%.`
 
   return null
 }

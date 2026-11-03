@@ -1,34 +1,25 @@
-import { useId } from 'react'
-import type { ChangeEvent } from 'react'
-import { formatAmountInput } from '../lib/format'
-import { sanitizeAmount } from '../lib/validate'
+import { useId } from "react";
+import type { ChangeEvent } from "react";
+import { formatAmountInput } from "../lib/format";
+import { sanitizeAmount } from "../lib/validate";
 
 type CurrencyInputProps = {
-  label: string
-  hint?: string
-  value: string
-  onChange: (digits: string) => void
-  error?: string | null
-  autoFocus?: boolean
-}
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (digits: string) => void;
+  error?: string | null;
+  autoFocus?: boolean;
+};
 
-export function CurrencyInput({
-  label,
-  hint,
-  value,
-  onChange,
-  error,
-  autoFocus = false,
-}: CurrencyInputProps) {
-  const id = useId()
-  const hintId = `${id}-hint`
-  const errorId = `${id}-error`
-  const describedBy = [hint ? hintId : null, error ? errorId : null]
-    .filter(Boolean)
-    .join(' ')
+export function CurrencyInput({ label, hint, value, onChange, error, autoFocus = false }: CurrencyInputProps) {
+  const id = useId();
+  const hintId = `${id}-hint`;
+  const errorId = `${id}-error`;
+  const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ");
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    onChange(sanitizeAmount(event.target.value))
+    onChange(sanitizeAmount(event.target.value));
   }
 
   return (
@@ -46,16 +37,13 @@ export function CurrencyInput({
 
       <div
         className={[
-          'mt-2 flex items-center overflow-hidden rounded-xl border bg-white transition dark:bg-navy-950/60',
+          "mt-2 flex items-center overflow-hidden rounded-xl border bg-white transition dark:bg-navy-950/60",
           error
-            ? 'border-red-300 ring-1 ring-red-100 dark:border-red-500/50 dark:ring-red-500/20'
-            : 'border-slate-200 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 dark:border-white/10 dark:focus-within:border-brand-500 dark:focus-within:ring-brand-500/25',
-        ].join(' ')}
+            ? "border-red-300 ring-1 ring-red-100 dark:border-red-500/50 dark:ring-red-500/20"
+            : "border-slate-200 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 dark:border-white/10 dark:focus-within:border-brand-500 dark:focus-within:ring-brand-500/25",
+        ].join(" ")}
       >
-        <span
-          className="pl-3.5 pr-2 text-base font-semibold text-slate-400 sm:pl-4 sm:text-lg dark:text-slate-500"
-          aria-hidden="true"
-        >
+        <span className="pl-3.5 pr-2 text-base font-semibold text-slate-400 sm:pl-4 sm:text-lg dark:text-slate-500" aria-hidden="true">
           Rp
         </span>
         <input
@@ -79,5 +67,5 @@ export function CurrencyInput({
         </p>
       ) : null}
     </div>
-  )
+  );
 }
